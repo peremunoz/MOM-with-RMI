@@ -1,2 +1,7 @@
-package exceptions;public class EMomError {
+package exceptions;
+
+public class EMomError extends Exception {
+    public EMomError(String message) {
+        super(message);
+    }
 }
