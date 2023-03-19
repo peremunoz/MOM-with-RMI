@@ -1,2 +1,4 @@
-public record Message(String message, int type) {
+import java.io.Serializable;
+
+public record Message(String message, int type) implements Serializable {
 }
