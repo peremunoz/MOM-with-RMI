@@ -48,9 +48,38 @@ public class DisSumWorker implements TopicListenerInterface {
         mom.MsgQ_Subscribe("Work", listenerStub);
     }
 
+    private static void processLogMessage(Message message) {
+        System.out.println("Log → " + message.message());
+    }
+
+    private static void processWorkMessage(Message message) {
+        String[] workIntervals = message.message().split("-");
+        long start = Long.parseLong(workIntervals[0]);
+        long end = Long.parseLong(workIntervals[1]);
+        System.out.println("Received work → " + start + " - " + end);
+
+        long result = computeWork(start, end);
+        sendResult(result);
+    }
+
+    private static long computeWork(long start, long end) {
+        // TODO: Compute the sum of all prime numbers between start and end
+        return 0;
+    }
+
+    private static void sendResult(long result) {
+        // TODO: Send the result to the Result queue
+    }
+
     @Override
     public void onTopicMessage(String topicName, Message message) throws RemoteException {
-
+        if (topicName.equals("Log")) {
+            processLogMessage(message);
+        } else if (topicName.equals("Work")) {
+            processWorkMessage(message);
+        } else {
+            System.out.println("Unknown topic: " + topicName);
+        }
     }
 
     @Override
