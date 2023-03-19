@@ -102,9 +102,6 @@ public class MOMServant implements MOM {
         if (!topics.containsKey(topic)) {
             throw new EMomError("Topic does not exist or has been closed");
         }
-        if (topicListeners.get(topic).isEmpty()) {
-            throw new EMomError("No listeners for this topic");
-        }
 
         Message msg = new Message(message, type);
         if (!topic.equals("Log")) {
