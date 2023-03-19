@@ -2,6 +2,7 @@ import exceptions.EMomError;
 
 import java.rmi.RemoteException;
 import java.util.Hashtable;
+import java.util.Objects;
 import java.util.Vector;
 
 public class MOMServant implements MOM {
@@ -78,8 +79,8 @@ public class MOMServant implements MOM {
         if (msgQueues.containsKey(topicName) || topics.containsKey(topicName)) {
             throw new EMomError("Topic already exists");
         }
-        Log("Creating topic " + topicName);
         topics.put(topicName, mode);
+        Log("Created topic " + topicName);
         // Add the topic to the topic listeners
         topicListeners.put(topicName, new Vector<>());
     }
@@ -104,7 +105,9 @@ public class MOMServant implements MOM {
         }
 
         Message msg = new Message(message, type);
-        Log("Publishing message to topic " + topic + ": " + msg.message());
+        if (!Objects.equals(topic, "Log")) {
+            Log("Publishing message to topic " + topic + ": " + msg.message());
+        }
 
         try {
             if (topics.get(topic) == EPublishMode.BROADCAST) {
