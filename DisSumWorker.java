@@ -10,6 +10,7 @@ public class DisSumWorker implements TopicListenerInterface {
 
     private static String HOST = "localhost";
     private static MOM mom;
+    private static int tasksCompleted = 0;
 
     public static void main(String[] args) {
 
@@ -84,6 +85,11 @@ public class DisSumWorker implements TopicListenerInterface {
 
     @Override
     public void onTopicClosed(String topicName) throws RemoteException {
-
+        if (topicName.equals("Log")) {
+            System.out.println("Log topic closed");
+            System.out.println("Number of tasks completed: " + tasksCompleted);
+        } else {
+            System.out.println(topicName + " topic closed");
+        }
     }
 }
