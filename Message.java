@@ -1,1 +1,2 @@
-public record Message(String message, int type) { }
+public record Message(String message, int type) {
+}
