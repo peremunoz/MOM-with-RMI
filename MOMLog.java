@@ -20,8 +20,8 @@ public class MOMLog implements TopicListenerInterface {
 
         MsgQ_Init();
 
-        System.out.println("MOM Log up and listening to system events!\n");
-        System.out.println(" · [Log System] · ");
+        System.out.println("MOM Log up and listening to system events ✓\n");
+        System.out.println(" ↓ [Log System] ↓ ");
     }
 
     private static void MsgQ_Init() throws RemoteException, NotBoundException, EMomError {
