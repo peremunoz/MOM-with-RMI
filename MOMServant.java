@@ -52,7 +52,7 @@ public class MOMServant implements MOM {
         if (!msgQueues.containsKey(msgQname)) {
             throw new EMomError("Queue does not exist or has been closed");
         }
-        Log("Sending message to queue " + msgQname);
+        Log("Sending message to queue " + msgQname + ". Message: " + message + " Type: " + type);
         msgQueues.get(msgQname).add(new Message(message, type));
     }
 
@@ -84,7 +84,7 @@ public class MOMServant implements MOM {
         // Add the topic to the topic listeners
         topicListeners.put(topicName, new Vector<>());
         if (!topicName.equals("Log")) {
-            Log("Creating topic " + topicName);
+            Log("Creating topic " + topicName + " with mode " + mode);
         }
     }
 
@@ -108,7 +108,7 @@ public class MOMServant implements MOM {
         }
 
         Message msg = new Message(message, type);
-        if (!Objects.equals(topic, "Log")) {
+        if (!topic.equals("Log")) {
             Log("Publishing message to topic " + topic + ": " + msg.message());
         }
 
@@ -128,7 +128,9 @@ public class MOMServant implements MOM {
         if (!topics.containsKey(topic)) {
             throw new EMomError("Topic does not exist or has been closed");
         }
-        Log("Subscribing to topic " + topic);
+        if (!topic.equals("Log")) {
+            Log("Subscribing to topic " + topic);
+        }
         topicListeners.get(topic).add(listener);
     }
 
@@ -147,7 +149,6 @@ public class MOMServant implements MOM {
     private void notifyTopicBroadcast(String topicName, Message msg) throws EMomError {
         for (TopicListenerInterface listener : topicListeners.get(topicName)) {
             try {
-                Log("Notifying listener " + listener + " of message " + msg.message() + " in topic " + topicName + " (broadcast)");
                 listener.onTopicMessage(msg);
             } catch (RemoteException e) {
                 throw new EMomError("Error notifying topic listeners in broadcast mode");
@@ -161,7 +162,6 @@ public class MOMServant implements MOM {
         listeners.remove(0);
         listeners.add(listenerToSend);
         try {
-            Log("Notifying listener " + listenerToSend + " of message " + msg.message() + " in topic " + topicName + " in round robin mode");
             listenerToSend.onTopicMessage(msg);
         } catch (RemoteException e) {
             throw new EMomError("Error notifying topic listeners in round robin mode");
@@ -169,6 +169,6 @@ public class MOMServant implements MOM {
     }
 
     private void Log(String message) throws EMomError, RemoteException {
-        MsgQ_Publish("Log", message, 0);
+        MsgQ_Publish("Log", message, -1);
     }
 }

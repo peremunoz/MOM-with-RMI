@@ -30,7 +30,7 @@ public class MOMServer extends MOMServant {
             System.out.println("MOM Server up!");
 
         } catch (Exception e) {
-            System.out.println("Error starting the server: " + e.getMessage());
+            System.out.println("Error in server > " + e.getMessage());
         }
     }
 }
