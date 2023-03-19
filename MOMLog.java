@@ -18,6 +18,13 @@ public class MOMLog implements TopicListenerInterface {
             HOST = args[0];
         }
 
+        MsgQ_Init();
+
+        System.out.println("MOM Log up and listening to system events!\n");
+        System.out.println(" · [Log System] · ");
+    }
+
+    private static void MsgQ_Init() throws RemoteException, NotBoundException, EMomError {
         // Get the RMI registry
         Registry registry = LocateRegistry.getRegistry(HOST);
 
@@ -31,9 +38,6 @@ public class MOMLog implements TopicListenerInterface {
         MOMLog log = new MOMLog();
         TopicListenerInterface logStub = (TopicListenerInterface) UnicastRemoteObject.exportObject(log, 0);
         mom.MsgQ_Subscribe("Log", logStub);
-
-        System.out.println("MOM Log up and listening to system events!\n");
-        System.out.println(" · [Log System] · ");
     }
 
     @Override
