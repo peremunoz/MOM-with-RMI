@@ -6,6 +6,8 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
+import static java.lang.System.exit;
+
 public class DisSumWorker implements TopicListenerInterface {
 
     private static String HOST = "localhost";
@@ -53,7 +55,7 @@ public class DisSumWorker implements TopicListenerInterface {
         System.out.println("Log → " + message.message());
     }
 
-    private static void processWorkMessage(Message message) {
+    private static void processWorkMessage(Message message) throws EMomError, RemoteException {
         String[] workIntervals = message.message().split("-");
         long start = Long.parseLong(workIntervals[0]);
         long end = Long.parseLong(workIntervals[1]);
@@ -61,19 +63,39 @@ public class DisSumWorker implements TopicListenerInterface {
 
         long result = computeWork(start, end);
         sendResult(result);
+        System.out.println("Sent result to master → " + result);
     }
 
     private static long computeWork(long start, long end) {
-        // TODO: Compute the sum of all prime numbers between start and end
-        return 0;
+        long sum = 0;
+        for (long i = start; i <= end; i++) {
+            if (isPrime(i)) {
+                sum += i;
+            }
+        }
+        tasksCompleted++;
+        return sum;
     }
 
-    private static void sendResult(long result) {
-        // TODO: Send the result to the Result queue
+    private static void sendResult(long result) throws EMomError, RemoteException {
+        Message message = new Message(String.valueOf(result), 1);
+        mom.MsgQ_SendMessage("Results", message.message(), message.type());
+    }
+
+    private static boolean isPrime(long num) {
+        if (num <= 1) {
+            return false;
+        }
+        for (int i = 2; num <= Math.sqrt(num); i++) {
+            if (num % i == 0) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
-    public void onTopicMessage(String topicName, Message message) throws RemoteException {
+    public void onTopicMessage(String topicName, Message message) throws RemoteException, EMomError {
         if (topicName.equals("Log")) {
             processLogMessage(message);
         } else if (topicName.equals("Work")) {
@@ -88,6 +110,7 @@ public class DisSumWorker implements TopicListenerInterface {
         if (topicName.equals("Log")) {
             System.out.println("Log topic closed");
             System.out.println("Number of tasks completed: " + tasksCompleted);
+            exit(0);
         } else {
             System.out.println(topicName + " topic closed");
         }
