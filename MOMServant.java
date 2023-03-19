@@ -21,7 +21,7 @@ public class MOMServant implements MOM {
             MsgQ_CreateTopic("Log", EPublishMode.BROADCAST);
             System.out.println("Created Log topic for monitoring the MOM system.");
         } catch (EMomError | RemoteException e) {
-            throw new EMomError("Error creating the Log topic: " + e.getMessage());
+            throw new EMomError("Error creating the Log topic → " + e.getMessage());
         }
     }
 
@@ -115,7 +115,7 @@ public class MOMServant implements MOM {
                 notifyTopicRoundRobin(topic, msg);
             }
         } catch (EMomError e) {
-            throw new EMomError("Error notifying topic listeners because: " + e.getMessage());
+            throw new EMomError("Error notifying topic listeners because → " + e.getMessage());
         }
     }
 
@@ -131,13 +131,13 @@ public class MOMServant implements MOM {
     }
 
     // Auxiliary methods
-    private void notifyTopicClosing(String topicName) {
+    private void notifyTopicClosing(String topicName) throws EMomError {
         for (TopicListenerInterface listener : topicListeners.get(topicName)) {
             try {
                 Log("Notifying listener " + listener + " that topic " + topicName + " is closing");
                 listener.onTopicClosed(topicName);
             } catch (RemoteException | EMomError e) {
-                e.printStackTrace();
+                throw new EMomError("Error notifying listener " + listener + " that topic " + topicName + " is closing because → " + e.getMessage());
             }
         }
     }
