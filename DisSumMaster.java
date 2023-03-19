@@ -1,6 +1,5 @@
 import exceptions.EMomError;
 
-import java.io.IOException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -16,7 +15,7 @@ public class DisSumMaster {
     private static String HOST = "localhost";
     private static MOM mom;
 
-    public static void main(String[] args) throws IOException, NotBoundException {
+    public static void main(String[] args) {
 
         if (args.length < 2) {
             System.out.println("Usage: java DisSumMaster <M> <N> [<server-ip>]");
@@ -51,11 +50,9 @@ public class DisSumMaster {
 
             exit(0);
 
-        } catch (EMomError e) {
+        } catch (Exception e) {
             System.out.println("Error → " + e.getMessage());
         }
-
-
     }
 
     private static void MsgQ_Init(String[] args) throws RemoteException, NotBoundException {
