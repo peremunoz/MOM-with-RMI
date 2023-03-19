@@ -20,6 +20,7 @@ public class MOMServant implements MOM {
     public MOMServant() throws EMomError {
         try {
             MsgQ_CreateTopic("Log", EPublishMode.BROADCAST);
+            System.out.println("Created Log topic for monitoring the MOM system.");
         } catch (EMomError | RemoteException e) {
             throw new EMomError("Error creating the Log topic: " + e.getMessage());
         }
@@ -80,9 +81,11 @@ public class MOMServant implements MOM {
             throw new EMomError("Topic already exists");
         }
         topics.put(topicName, mode);
-        Log("Created topic " + topicName);
         // Add the topic to the topic listeners
         topicListeners.put(topicName, new Vector<>());
+        if (!topicName.equals("Log")) {
+            Log("Creating topic " + topicName);
+        }
     }
 
     @Override
@@ -100,7 +103,7 @@ public class MOMServant implements MOM {
         if (!topics.containsKey(topic)) {
             throw new EMomError("Topic does not exist or has been closed");
         }
-        if (topicListeners.get(topic).size() == 0) {
+        if (topicListeners.get(topic).isEmpty()) {
             throw new EMomError("No listeners for this topic");
         }
 
