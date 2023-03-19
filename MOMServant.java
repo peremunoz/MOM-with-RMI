@@ -145,7 +145,7 @@ public class MOMServant implements MOM {
     private void notifyTopicBroadcast(String topicName, Message msg) throws EMomError {
         for (TopicListenerInterface listener : topicListeners.get(topicName)) {
             try {
-                listener.onTopicMessage(msg);
+                listener.onTopicMessage(topicName, msg);
             } catch (RemoteException e) {
                 throw new EMomError("Error notifying topic listeners in broadcast mode");
             }
@@ -158,7 +158,7 @@ public class MOMServant implements MOM {
         listeners.remove(0);
         listeners.add(listenerToSend);
         try {
-            listenerToSend.onTopicMessage(msg);
+            listenerToSend.onTopicMessage(topicName, msg);
         } catch (RemoteException e) {
             throw new EMomError("Error notifying topic listeners in round robin mode");
         }
