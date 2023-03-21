@@ -1,4 +1,6 @@
-import exceptions.EMomError;
+package RMIObjects;
+
+import RMIObjects.exceptions.EMomError;
 
 public interface TopicListenerInterface extends java.rmi.Remote {
     void onTopicMessage(String topicName, Message message) throws java.rmi.RemoteException, EMomError;

@@ -1,4 +1,6 @@
-import exceptions.*;
+package RMIObjects;
+
+import RMIObjects.exceptions.EMomError;
 
 import java.rmi.RemoteException;
 

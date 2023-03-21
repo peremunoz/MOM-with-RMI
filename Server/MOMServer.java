@@ -1,4 +1,8 @@
-import exceptions.EMomError;
+package Server;
+
+import RMIObjects.MOM;
+import RMIObjects.MOMServant;
+import RMIObjects.exceptions.EMomError;
 
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;

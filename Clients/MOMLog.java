@@ -1,4 +1,9 @@
-import exceptions.EMomError;
+package Clients;
+
+import RMIObjects.MOM;
+import RMIObjects.Message;
+import RMIObjects.TopicListenerInterface;
+import RMIObjects.exceptions.EMomError;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;

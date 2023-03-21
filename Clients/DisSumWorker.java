@@ -1,4 +1,9 @@
-import exceptions.EMomError;
+package Clients;
+
+import RMIObjects.MOM;
+import RMIObjects.Message;
+import RMIObjects.TopicListenerInterface;
+import RMIObjects.exceptions.EMomError;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -47,7 +52,7 @@ public class DisSumWorker implements TopicListenerInterface {
         TopicListenerInterface listenerStub = (TopicListenerInterface) UnicastRemoteObject.exportObject(listener, 0);
 
         // Subscribe it to Work and Log topic
-        mom.MsgQ_Subscribe("Log", listenerStub);
+        //mom.MsgQ_Subscribe("Log", listenerStub);
         mom.MsgQ_Subscribe("Work", listenerStub);
     }
 
@@ -107,12 +112,11 @@ public class DisSumWorker implements TopicListenerInterface {
 
     @Override
     public void onTopicClosed(String topicName) throws RemoteException {
+        System.out.println(topicName + " topic closed");
+
         if (topicName.equals("Log")) {
-            System.out.println("Log topic closed");
             System.out.println("Number of tasks completed: " + tasksCompleted);
             exit(0);
-        } else {
-            System.out.println(topicName + " topic closed");
         }
     }
 }
