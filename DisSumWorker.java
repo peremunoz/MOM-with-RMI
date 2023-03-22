@@ -62,6 +62,7 @@ public class DisSumWorker implements TopicListenerInterface {
         System.out.println("Received work → " + start + " - " + end);
 
         long result = computeWork(start, end);
+        System.out.println("Computed result → " + result);
         sendResult(result);
         System.out.println("Sent result to master → " + result);
     }
@@ -107,8 +108,8 @@ public class DisSumWorker implements TopicListenerInterface {
 
     @Override
     public void onTopicClosed(String topicName) throws RemoteException {
-        if (topicName.equals("Log")) {
-            System.out.println("Log topic closed");
+        if (topicName.equals("Work")) {
+            System.out.println("Work topic closed");
             System.out.println("Number of tasks completed: " + tasksCompleted);
             exit(0);
         } else {
