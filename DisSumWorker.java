@@ -6,8 +6,6 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
-import static java.lang.System.exit;
-
 public class DisSumWorker implements TopicListenerInterface {
 
     private static String HOST = "localhost";
@@ -111,7 +109,6 @@ public class DisSumWorker implements TopicListenerInterface {
         if (topicName.equals("Work")) {
             System.out.println("Work topic has been closed");
             System.out.println("Number of tasks completed: " + tasksCompleted);
-            exit(0);
         } else {
             System.out.println(topicName + " topic closed");
         }
