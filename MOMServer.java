@@ -4,6 +4,8 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
+import static java.lang.System.exit;
+
 public class MOMServer extends MOMServant {
     public MOMServer() throws EMomError {}
 
@@ -35,6 +37,7 @@ public class MOMServer extends MOMServant {
             registry.rebind("MOM", momStub);
         } catch (Exception e) {
             System.out.println("Error in server → " + e.getMessage());
+            exit(1);
         }
     }
 }
