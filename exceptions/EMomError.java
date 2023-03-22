@@ -1,4 +1,4 @@
-package RMIObjects.exceptions;
+package exceptions;
 
 public class EMomError extends Exception {
     public EMomError(String message) {

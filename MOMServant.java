@@ -1,6 +1,4 @@
-package RMIObjects;
-
-import RMIObjects.exceptions.EMomError;
+import exceptions.EMomError;
 
 import java.rmi.RemoteException;
 import java.util.Hashtable;
@@ -154,7 +152,7 @@ public class MOMServant implements MOM {
         }
     }
 
-    private synchronized void notifyTopicRoundRobin(String topicName, Message msg) throws EMomError {
+    private void notifyTopicRoundRobin(String topicName, Message msg) throws EMomError {
         Vector<TopicListenerInterface> listeners = topicListeners.get(topicName);
         TopicListenerInterface listenerToSend = listeners.get(0);
         listeners.remove(0);
