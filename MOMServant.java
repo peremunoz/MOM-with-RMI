@@ -49,7 +49,7 @@ public class MOMServant implements MOM {
     @Override
     public void MsgQ_SendMessage(String msgQname, String message, int type) throws EMomError, RemoteException {
         if (!msgQueues.containsKey(msgQname)) {
-            throw new EMomError("Queue does not exist or has been closed");
+            throw new EMomError("Queue not found");
         }
         Log("Sending message to queue " + msgQname + ". Message: " + message + " Type: " + type);
         msgQueues.get(msgQname).add(new Message(message, type));
@@ -58,7 +58,7 @@ public class MOMServant implements MOM {
     @Override
     public String MsgQ_ReceiveMessage(String msgQname, int type) throws EMomError, RemoteException {
         if (!msgQueues.containsKey(msgQname)) {
-            throw new EMomError("Queue does not exist or has been closed");
+            throw new EMomError("Queue not found");
         }
         Log("Receiving message from queue " + msgQname);
         Vector<Message> messages = msgQueues.get(msgQname);
@@ -95,12 +95,13 @@ public class MOMServant implements MOM {
         Log("Closing topic " + topicName);
         notifyTopicClosing(topicName);
         topics.remove(topicName);
+        topicListeners.remove(topicName);
     }
 
     @Override
     public void MsgQ_Publish(String topic, String message, int type) throws EMomError, RemoteException {
         if (!topics.containsKey(topic)) {
-            throw new EMomError("Topic does not exist or has been closed");
+            throw new EMomError("Topic not found");
         }
 
         Message msg = new Message(message, type);
@@ -131,40 +132,45 @@ public class MOMServant implements MOM {
     }
 
     // Auxiliary methods
-    private void notifyTopicClosing(String topicName) throws EMomError {
-        for (TopicListenerInterface listener : topicListeners.get(topicName)) {
-            try {
+    private void notifyTopicClosing(String topicName) throws EMomError, RemoteException {
+        synchronized (topicListeners.get(topicName)) {
+            for (TopicListenerInterface listener : topicListeners.get(topicName)) {
                 Log("Notifying listener " + listener + " that topic " + topicName + " is closing");
                 listener.onTopicClosed(topicName);
-            } catch (RemoteException | EMomError e) {
-                throw new EMomError("Error notifying listener " + listener + " that topic " + topicName + " is closing because → " + e.getMessage());
             }
         }
     }
 
     private void notifyTopicBroadcast(String topicName, Message msg) throws EMomError {
-        for (TopicListenerInterface listener : topicListeners.get(topicName)) {
-            try {
-                listener.onTopicMessage(topicName, msg);
-            } catch (RemoteException e) {
-                throw new EMomError("Error notifying topic listeners in broadcast mode");
+        synchronized (topicListeners.get(topicName)) {
+            for (TopicListenerInterface listener : topicListeners.get(topicName)) {
+                try {
+                    listener.onTopicMessage(topicName, msg);
+                } catch (RemoteException e) {
+                    throw new EMomError("Error notifying topic listeners in broadcast mode");
+                }
             }
         }
     }
 
     private void notifyTopicRoundRobin(String topicName, Message msg) throws EMomError {
-        Vector<TopicListenerInterface> listeners = topicListeners.get(topicName);
-        TopicListenerInterface listenerToSend = listeners.get(0);
-        listeners.remove(0);
-        listeners.add(listenerToSend);
-        try {
-            listenerToSend.onTopicMessage(topicName, msg);
-        } catch (RemoteException e) {
-            throw new EMomError("Error notifying topic listeners in round robin mode");
+        synchronized (topicListeners.get(topicName)) {
+            Vector<TopicListenerInterface> listeners = topicListeners.get(topicName);
+            if (listeners.size() == 0) {
+                return;
+            }
+            TopicListenerInterface listenerToSend = listeners.get(0);
+            listeners.remove(0);
+            listeners.add(listenerToSend);
+            try {
+                listenerToSend.onTopicMessage(topicName, msg);
+            } catch (RemoteException e) {
+                throw new EMomError("Error notifying topic listeners in round robin mode");
+            }
         }
     }
 
-    private void Log(String message) throws EMomError, RemoteException {
+    private void Log(String message) throws RemoteException, EMomError {
         MsgQ_Publish("Log", message, -1);
     }
 }
