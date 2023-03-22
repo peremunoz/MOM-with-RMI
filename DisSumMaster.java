@@ -74,8 +74,8 @@ public class DisSumMaster {
         // Create the "Work" topic for sending work to the workers
         mom.MsgQ_CreateTopic("Work", EPublishMode.ROUND_ROBIN);
 
-        // Create the "Result" queue for receiving results from the workers
-        mom.MsgQ_CreateQueue("Result");
+        // Create the "Results" queue for receiving results from the workers
+        mom.MsgQ_CreateQueue("Results");
     }
 
     private static Vector<Message> prepareMessages() {
@@ -112,7 +112,7 @@ public class DisSumMaster {
         int numberOfResults = N;
         int resultsReceived = 0;
         while (resultsReceived != numberOfResults) {
-            String message = mom.MsgQ_ReceiveMessage("Result", 1);
+            String message = mom.MsgQ_ReceiveMessage("Results", 1);
             if (message != null) {
                 result += Long.parseLong(message);
                 resultsReceived++;
@@ -123,7 +123,7 @@ public class DisSumMaster {
     }
 
     private static void closeQueues() throws EMomError, RemoteException {
-        mom.MsgQ_CloseQueue("Result");
+        mom.MsgQ_CloseQueue("Results");
         mom.MsgQ_CloseTopic("Work");
     }
 }
