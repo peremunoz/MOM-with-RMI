@@ -109,7 +109,7 @@ public class DisSumWorker implements TopicListenerInterface {
     @Override
     public void onTopicClosed(String topicName) throws RemoteException {
         if (topicName.equals("Work")) {
-            System.out.println("Work topic closed");
+            System.out.println("Work topic has been closed");
             System.out.println("Number of tasks completed: " + tasksCompleted);
             exit(0);
         } else {
