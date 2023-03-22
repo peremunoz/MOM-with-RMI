@@ -135,8 +135,12 @@ public class MOMServant implements MOM {
     private void notifyTopicClosing(String topicName) throws EMomError, RemoteException {
         synchronized (topicListeners.get(topicName)) {
             for (TopicListenerInterface listener : topicListeners.get(topicName)) {
-                Log("Notifying listener " + listener + " that topic " + topicName + " is closing");
-                listener.onTopicClosed(topicName);
+                try {
+                    Log("Notifying listener " + listener + " that topic " + topicName + " is closing");
+                    listener.onTopicClosed(topicName);
+                } catch (RemoteException e) {
+                    throw new EMomError("Error notifying topic listener because → " + e.getMessage());
+                }
             }
         }
     }
