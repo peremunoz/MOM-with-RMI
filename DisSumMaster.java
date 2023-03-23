@@ -15,6 +15,7 @@ public class DisSumMaster {
     private static String HOST = "localhost";
     private static MOM mom;
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public static void main(String[] args) {
 
         if (args.length < 2) {
@@ -103,7 +104,7 @@ public class DisSumMaster {
 
     private static void sendMessages(Vector<Message> messageVector) throws EMomError, RemoteException {
         for (Message message : messageVector) {
-            mom.MsgQ_Publish("Work", message.message(), message.type());
+            mom.MsgQ_Publish("Work", message.getMessage(), message.getType());
         }
     }
 

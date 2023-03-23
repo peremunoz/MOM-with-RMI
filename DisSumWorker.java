@@ -50,11 +50,11 @@ public class DisSumWorker implements TopicListenerInterface {
     }
 
     private static void processLogMessage(Message message) {
-        System.out.println("Log → " + message.message());
+        System.out.println("Log → " + message.getMessage());
     }
 
     private static void processWorkMessage(Message message) throws EMomError, RemoteException {
-        String[] workIntervals = message.message().split("-");
+        String[] workIntervals = message.getMessage().split("-");
         long start = Long.parseLong(workIntervals[0]);
         long end = Long.parseLong(workIntervals[1]);
         System.out.println("Received work → " + start + " - " + end);
@@ -78,7 +78,7 @@ public class DisSumWorker implements TopicListenerInterface {
 
     private static void sendResult(long result) throws EMomError, RemoteException {
         Message message = new Message(String.valueOf(result), 1);
-        mom.MsgQ_SendMessage("Results", message.message(), message.type());
+        mom.MsgQ_SendMessage("Results", message.getMessage(), message.getType());
     }
 
     private static boolean isPrime(long num) {

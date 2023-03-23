@@ -42,7 +42,7 @@ public class MOMLog implements TopicListenerInterface {
 
     @Override
     public void onTopicMessage(String topicName, Message message) throws RemoteException {
-        System.out.println(topicName + ": " + message.message());
+        System.out.println(topicName + ": " + message.getMessage());
     }
 
     @Override

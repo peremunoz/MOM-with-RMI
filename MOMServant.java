@@ -64,10 +64,10 @@ public class MOMServant implements MOM {
         Vector<Message> messages = msgQueues.get(msgQname);
         for (int i = 0; i < messages.size(); i++) {
             Message msg = messages.get(i);
-            if (msg.type() == type || type == 0) {
+            if (msg.getType() == type || type == 0) {
                 messages.remove(i);
-                Log("Received message from queue " + msgQname + ": " + msg.message());
-                return msg.message();
+                Log("Received message from queue " + msgQname + ": " + msg.getMessage());
+                return msg.getMessage();
             }
         }
         Log("No message of type " + type + " found in queue " + msgQname);
@@ -106,7 +106,7 @@ public class MOMServant implements MOM {
 
         Message msg = new Message(message, type);
         if (!topic.equals("Log")) {
-            Log("Publishing message to topic " + topic + ": " + msg.message());
+            Log("Publishing message to topic " + topic + ": " + msg.getMessage());
         }
 
         try {
