@@ -29,9 +29,9 @@ public class MOMServer extends MOMServant {
             MOMServant mom = new MOMServant();
             MOM momStub = (MOM) UnicastRemoteObject.exportObject(mom, 0);
 
-            // Create the JNDI registry
+            // Create the RMI registry
             Registry registry = LocateRegistry.createRegistry(PORT);
-            System.out.println("JNDI registry created on port "+ PORT + "✓");
+            System.out.println("RMI registry created on port "+ PORT + " ✓");
 
             // Register the stub in the registry
             registry.rebind("MOM", momStub);
