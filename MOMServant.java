@@ -53,15 +53,21 @@ public class MOMServant implements MOM {
         }
         Log("Sending message to queue " + msgQname + ". Message: " + message + " Type: " + type);
         msgQueues.get(msgQname).add(new Message(message, type));
+
+        synchronized (msgQueues.get(msgQname)) {
+            msgQueues.get(msgQname).notifyAll();
+        }
+
     }
 
     @Override
-    public String MsgQ_ReceiveMessage(String msgQname, int type) throws EMomError, RemoteException {
+    public String MsgQ_ReceiveMessage(String msgQname, int type, boolean blocking) throws EMomError, RemoteException, InterruptedException {
         if (!msgQueues.containsKey(msgQname)) {
             throw new EMomError("Queue not found");
         }
         Log("Receiving message from queue " + msgQname);
         Vector<Message> messages = msgQueues.get(msgQname);
+
         for (int i = 0; i < messages.size(); i++) {
             Message msg = messages.get(i);
             if (msg.getType() == type || type == 0) {
@@ -70,7 +76,15 @@ public class MOMServant implements MOM {
                 return msg.getMessage();
             }
         }
-        Log("No message of type " + type + " found in queue " + msgQname);
+
+        if (blocking) {
+            synchronized (msgQueues.get(msgQname)) {
+                while (msgQueues.get(msgQname).isEmpty() || msgQueues.get(msgQname).lastElement().getType() != type) {
+                    msgQueues.get(msgQname).wait();
+                }
+                return messages.lastElement().getMessage();
+            }
+        }
         return null;
     }
 

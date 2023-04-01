@@ -108,17 +108,15 @@ public class DisSumMaster {
         }
     }
 
-    private static long getResult() throws EMomError, RemoteException {
+    private static long getResult() throws EMomError, RemoteException, InterruptedException {
         long result = 0;
         int numberOfResults = N;
         int resultsReceived = 0;
-        while (resultsReceived != numberOfResults) {
-            String message = mom.MsgQ_ReceiveMessage("Results", 1);
-            if (message != null) {
-                result += Long.parseLong(message);
-                resultsReceived++;
-                System.out.println(resultsReceived + "/" + numberOfResults + " results received");
-            }
+        for (int i=0; i < numberOfResults; i++) {
+            String message = mom.MsgQ_ReceiveMessage("Results", 1, true);
+            result += Long.parseLong(message);
+            resultsReceived++;
+            System.out.println(resultsReceived + "/" + numberOfResults + " received");
         }
         return result;
     }

@@ -36,7 +36,7 @@ public class MOMServer extends MOMServant {
             // Register the stub in the registry
             registry.rebind("MOM", momStub);
         } catch (Exception e) {
-            System.out.println("Error in server → " + e.getMessage());
+            System.out.println("Error starting the server → " + e.getMessage());
             exit(1);
         }
     }
