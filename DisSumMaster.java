@@ -23,6 +23,9 @@ public class DisSumMaster {
             exit(1);
         }
         try {
+            // Set the security manager
+            System.setSecurityManager(new SecurityManager());
+
             System.out.println("Master client starting...");
 
             MsgQ_Init(args);
