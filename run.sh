@@ -33,9 +33,6 @@ if [ $# -gt 3 ]; then
     port=$4
 fi
 
-# Create a variable for storing the path to the current directory
-path=$(pwd)
-
 # Compile all the .java files in the current directory
 javac *.java
 
