@@ -15,9 +15,6 @@ public class DisSumWorker implements TopicListenerInterface {
     public static void main(String[] args) {
 
         try {
-            // Set the security manager
-            System.setSecurityManager(new SecurityManager());
-
             System.out.println("Worker client starting...");
 
             MsgQ_Init(args);
