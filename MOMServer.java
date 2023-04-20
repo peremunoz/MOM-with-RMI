@@ -17,9 +17,6 @@ public class MOMServer extends MOMServant {
             PORT = Integer.parseInt(args[0]);
         }
 
-        // Set the security manager
-        System.setSecurityManager(new SecurityManager());
-
         System.out.println("Starting MOM Server...");
 
         MsgQ_Init();

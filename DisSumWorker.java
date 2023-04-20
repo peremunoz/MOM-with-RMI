@@ -15,9 +15,6 @@ public class DisSumWorker implements TopicListenerInterface {
     public static void main(String[] args) {
 
         try {
-            // Set the security manager
-            System.setSecurityManager(new SecurityManager());
-
             System.out.println("Worker client starting...");
 
             MsgQ_Init(args);
@@ -88,7 +85,7 @@ public class DisSumWorker implements TopicListenerInterface {
         if (num <= 1) {
             return false;
         }
-        for (int i = 2; num <= Math.sqrt(num); i++) {
+        for (int i = 2; i <= Math.sqrt(num); i++) {
             if (num % i == 0) {
                 return false;
             }
